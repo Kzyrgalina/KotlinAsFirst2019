@@ -66,11 +66,12 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String {
-    if ((age % 10 == 1) && (age != 11) && (age != 111)) return "$age год"
-    if ((age in 5..20) || (age in 105..120) || (age % 10 == 5) || (age % 10 == 6) || (age % 10 == 7)
-        || (age % 10 == 8) || (age % 10 == 9) || (age % 10 == 0)
-    ) return "$age лет"
-    else return "$age года"
+    return when {
+        ((age == 11) || (age == 111)) -> return "$age лет"
+        ((age in 5..20) || (age in 105..120) || (age % 10 in 5..9)) && (age % 10 != 1) -> return "$age лет"
+        (age % 10 == 1) -> "$age год"
+        else -> return "$age года"
+    }
 }
 
 /**
@@ -85,10 +86,12 @@ fun timeForHalfWay(
     t2: Double, v2: Double,
     t3: Double, v3: Double
 ): Double {
-    var s = v1 * t1 + v2 * t2 + v3 * t3
-    if (v1 * t1 >= s / 2) return s / 2 / v1 else
-        if (v1 * t1 + v2 * t2 >= s / 2) return ((s / 2 - v1 * t1) / v2 + t1)
-        else return (s / 2 - v1 * t1 - v2 * t2) / v3 + t1 + t2
+    val s = v1 * t1 + v2 * t2 + v3 * t3
+    return when {
+        (v1 * t1 >= s / 2) -> return s / 2 / v1
+        (v1 * t1 + v2 * t2 >= s / 2) -> return ((s / 2 - v1 * t1) / v2 + t1)
+        else -> return (s / 2 - v1 * t1 - v2 * t2) / v3 + t1 + t2
+    }
 }
 
 /**
@@ -141,9 +144,9 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    var A = ((sqr(b) + sqr(c) - sqr(a)) / 2 / b / c)
-    var B = ((sqr(c) + sqr(a) - sqr(b)) / 2 / c / a)
-    var C = ((sqr(a) + sqr(b) - sqr(c)) / 2 / a / b)
+    val A = ((sqr(b) + sqr(c) - sqr(a)) / 2 / b / c)
+    val B = ((sqr(c) + sqr(a) - sqr(b)) / 2 / c / a)
+    val C = ((sqr(a) + sqr(b) - sqr(c)) / 2 / a / b)
     if ((A !in -1.0..1.0) || (B !in -1.0..1.0) || (C !in -1.0..1.0)) return -1
     if ((A == 0.0) || (B == 0.0) || (C == 0.0)) return 1
     if ((A > 0.0) && (B > 0.0) && (C > 0.0)) return 0
