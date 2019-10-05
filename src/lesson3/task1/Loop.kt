@@ -2,6 +2,10 @@
 
 package lesson3.task1
 
+import lesson1.task1.sqr
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
@@ -94,6 +98,7 @@ fun fib(n: Int): Int {
     }
     return f
 }
+
 /**
  * Простая
  *
@@ -101,12 +106,14 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var k = 1
-    while (true) {
-        if ((k % m == 0) && (k % n == 0)) break
-        k++
+    var first_x_second = m * n
+    var first = m
+    var second = n
+    while (first != second) {
+        if (first > second) first -= second
+        else second -= first
     }
-    return k
+    return first_x_second / first
 }
 
 /**
@@ -129,13 +136,12 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var k = 1
-    var div = 0
-    while (k < n) {
-        if (n % k == 0) div = k
-        k++
+    var n2 = n / 2
+    while (n2 > 1) {
+        if (n % n2 == 0) return n2
+        n2--
     }
-    return div
+    return 1
 }
 
 /**
@@ -156,8 +162,8 @@ fun isCoPrime(m: Int, n: Int): Boolean = TODO()
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
 
-/**
- * Средняя
+/**                                                                                                                         
+ * Средняя                                                                                                                  
  *
  * Гипотеза Коллатца. Рекуррентная последовательность чисел задана следующим образом:
  *
@@ -174,6 +180,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  */
 fun collatzSteps(x: Int): Int = TODO()
 
+
 /**
  * Средняя
  *
@@ -183,7 +190,30 @@ fun collatzSteps(x: Int): Int = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var sin_sum = 0.0
+    var sin_pow = 3
+    var sin_sign = -1
+    var actual_sin: Double
+    var x0 = x
+
+    while (x0 !in (-2 * PI)..(2 * PI)) {
+        when {
+            (x0 < -2 * PI) -> x0 += 2 * PI
+            (x0 > 2 * PI) -> x0 -= 2 * PI
+        }
+    }
+
+    actual_sin = x0
+    sin_sum = actual_sin
+    while (abs(actual_sin) >= abs(eps)) {
+        actual_sin = ((sin_sign) * x0.pow(sin_pow) / factorial(sin_pow))
+        sin_pow += 2
+        sin_sign *= (-1)
+        sin_sum += actual_sin
+    }
+    return sin_sum
+}
 
 /**
  * Средняя
@@ -194,7 +224,29 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var cos_sum = 1.0
+    var cos_pow = 2
+    var cos_sign = -1
+    var actual_cos: Double
+    var x0 = x
+
+    while (x0 !in (-2 * PI)..(2 * PI)) {
+        when {
+            (x0 < -2 * PI) -> x0 += 2 * PI
+            (x0 > 2 * PI) -> x0 -= 2 * PI
+        }
+    }
+
+    actual_cos = x0
+    while (abs(actual_cos) >= abs(eps)) {
+        actual_cos = ((cos_sign) * x0.pow(cos_pow) / factorial(cos_pow))
+        cos_pow += 2
+        cos_sign *= (-1)
+        cos_sum += actual_cos
+    }
+    return cos_sum
+}
 
 /**
  * Средняя
@@ -203,7 +255,17 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var revert_number = 0
+    var number = n
+    while (number > 0) {
+        revert_number += number % 10
+        revert_number *= 10
+        number /= 10
+    }
+    revert_number /= 10
+    return revert_number
+}
 
 /**
  * Средняя
@@ -214,7 +276,11 @@ fun revert(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean {
+    var number = n
+    var revert_number = revert(n)
+    return (number == revert_number)
+}
 
 /**
  * Средняя
@@ -224,26 +290,98 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var number = n
+    var digit1: Int
+    var digit2: Int
+    if (number < 10) return false
+    digit1 = number % 10
+    digit2 = digit1
+    while ((number > 0) && (digit1 == digit2)) {
+        digit2 = number % 10
+        number /= 10
+    }
+    return (digit1 != digit2)
+}
 
 /**
- * Сложная
- *
- * Найти n-ю цифру последовательности из квадратов целых чисел:
+ * Сложная                                                                                                                  
+ *                                                                                                                          
+ * Найти n-ю цифру последовательности из квадратов целых чисел:                                                             
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var square = 1
+    var number = n
+    var length = 3
+    var i = 4
+    fun square_length(x: Int): Int {
+        var k = 0
+        var number = x
+        while (number > 0) {
+            k++
+            number /= 10
+        }
+        return k
+    }
+
+    if (number in 1..3) return sqr(number)
+    while (length < number) {
+        square = sqr(i)
+        length += square_length(sqr(i))
+        i++
+    }
+    if (length == number) return square % 10
+    else while (length != number) {
+        square /= 10
+        length--
+    }
+    return square % 10
+}
 
 /**
- * Сложная
- *
+ * Сложная                                                                                                                  
+ *                                                                                                                          
  * Найти n-ю цифру последовательности из чисел Фибоначчи (см. функцию fib выше):
  * 1123581321345589144...
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var fibonach = 1
+    var number = n
+    var length = 6
+    var i = 7
+    fun fib_length(x: Int): Int {
+        var k = 0
+        var number = x
+        while (number > 0) {
+            k++
+            number /= 10
+        }
+        return k
+    }
+    when (number) {
+        1 -> return 1
+        2 -> return 1
+        3 -> return 2
+        4 -> return 3
+        5 -> return 5
+        6 -> return 8
+    }
+    while (length < number) {
+        fibonach = fib(i)
+        length += fib_length(fib(i))
+        i++
+    }
+    if (length == number) return fibonach % 10
+    else while (length != number) {
+        fibonach /= 10
+        length--
+    }
+    return fibonach % 10
+}
