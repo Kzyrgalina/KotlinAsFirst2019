@@ -67,8 +67,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     return when {
+        ((age in 5..20) || (age in 105..120)) && (age % 10 != 1) -> return "$age лет"
         ((age == 11) || (age == 111)) -> return "$age лет"
-        ((age in 5..20) || (age in 105..120) || (age % 10 in 5..9)) && (age % 10 != 1) -> return "$age лет"
+        (age % 10 == 0) -> return "$age лет"
+        (age % 10 in 5..9) -> return "$age лет"
         (age % 10 == 1) -> "$age год"
         else -> return "$age года"
     }
@@ -88,9 +90,9 @@ fun timeForHalfWay(
 ): Double {
     val s = v1 * t1 + v2 * t2 + v3 * t3
     return when {
-        (v1 * t1 >= s / 2) -> return s / 2 / v1
-        (v1 * t1 + v2 * t2 >= s / 2) -> return ((s / 2 - v1 * t1) / v2 + t1)
-        else -> return (s / 2 - v1 * t1 - v2 * t2) / v3 + t1 + t2
+        (v1 * t1 >= s / 2) -> s / 2 / v1
+        (v1 * t1 + v2 * t2 >= s / 2) -> ((s / 2 - v1 * t1) / v2 + t1)
+        else -> (s / 2 - v1 * t1 - v2 * t2) / v3 + t1 + t2
     }
 }
 
@@ -144,13 +146,13 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    val A = ((sqr(b) + sqr(c) - sqr(a)) / 2 / b / c)
-    val B = ((sqr(c) + sqr(a) - sqr(b)) / 2 / c / a)
-    val C = ((sqr(a) + sqr(b) - sqr(c)) / 2 / a / b)
-    if ((A !in -1.0..1.0) || (B !in -1.0..1.0) || (C !in -1.0..1.0)) return -1
-    if ((A == 0.0) || (B == 0.0) || (C == 0.0)) return 1
-    if ((A > 0.0) && (B > 0.0) && (C > 0.0)) return 0
-    else return 2
+    val aa = ((sqr(b) + sqr(c) - sqr(a)) / 2 / b / c)
+    val bb = ((sqr(c) + sqr(a) - sqr(b)) / 2 / c / a)
+    val cc = ((sqr(a) + sqr(b) - sqr(c)) / 2 / a / b)
+    if ((aa !in -1.0..1.0) || (bb !in -1.0..1.0) || (cc !in -1.0..1.0)) return -1
+    if ((aa == 0.0) || (bb == 0.0) || (cc == 0.0)) return 1
+    return if ((aa > 0.0) && (bb > 0.0) && (cc > 0.0)) 0
+    else 2
 }
 
 /**
@@ -162,15 +164,17 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    if ((c == d) || (a == b)) return -1
     if (((b - a) == 0) || ((d - c) == 0)) return 0
     else
         if (c > a)
-            if (c > b) return -1
-            else
-                if (d > b) return b - c
-                else return d - c
+            return when {
+                c > b -> -1
+                d > b -> b - c
+                else -> d - c
+            }
         else
             if (d < a) return -1
-    if (d > b) return (b - a)
-    else return (d - a)
+    return if (d > b) (b - a)
+    else (d - a)
 }
