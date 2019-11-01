@@ -121,8 +121,8 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  */
 fun abs(v: List<Double>): Double {
     if (v.isEmpty()) return 0.0
-    fun squaresDouble(list: List<Double>) = list.map { it * it }
-    return abs(sqrt(squaresDouble(v).sum()))
+    val list = v.map { it * it }
+    return sqrt(list.sum())
 }
 
 /**
@@ -144,7 +144,6 @@ fun mean(list: List<Double>): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.isEmpty()) return list
     val mean = mean(list)
     for (i in 0 until list.size) {
         list[i] -= mean
@@ -160,7 +159,6 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
 fun times(a: List<Int>, b: List<Int>): Int {
-    if (a.isEmpty() || b.isEmpty()) return 0
     var c = 0
     for (i in a.indices) {
         c += a[i] * b[i]
@@ -196,11 +194,8 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    if (list.isEmpty()) return list
-    val list2 = list
     for (i in 1 until list.size) {
-        list[i] += list2[i - 1]
-        list2[i] = list[i]
+        list[i] += list[i - 1]
     }
     return list
 }
@@ -214,16 +209,16 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  */
 fun factorize(n: Int): List<Int> {
     val list = mutableListOf<Int>()
-    var n = n
+    var num = n
     var i = 2
     if (n == 2) {
         list.add(2)
         return list
     }
-    while (i <= n) {
-        if (n % i == 0) {
+    while (num > 1) {
+        if (num % i == 0) {
             list.add(i)
-            n /= i
+            num /= i
         } else i++
     }
     return list
@@ -236,20 +231,7 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String {
-    val list = factorize(n).toMutableList()
-    var t: Int
-    if (list.size == 1) return list.joinToString()
-    for (i in 0 until list.size) {
-        for (j in i + 1 until list.size - 1)
-            if (list[j] >= list[j + 1]) {
-                t = list[j]
-                list[j] = list[j + 1]
-                list[j + 1] = t
-            }
-    }
-    return list.joinToString(separator = "*")
-}
+fun factorizeToString(n: Int): String = factorize(n).toMutableList().joinToString(separator = "*")
 
 /**
  * Средняя
@@ -261,11 +243,11 @@ fun factorizeToString(n: Int): String {
 fun convert(n: Int, base: Int): List<Int> {
     if (n == 0) return listOf(0)
     val list = mutableListOf<Int>()
-    var n = n
+    var num = n
     var i = 0
-    while (n > 0) {
-        list.add(n % base)
-        n /= base
+    while (num > 0) {
+        list.add(num % base)
+        num /= base
         i++
     }
     return list.reversed()
@@ -284,11 +266,8 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     if (n == 0) return "0"
-    val list = convert(n, base).toMutableList()
-    return list.joinToString(
+    return convert(n, base).toMutableList().joinToString(
         separator = "",
-        prefix = "",
-        postfix = "",
         transform = { if (it > 9) ('a' + (it - 10)).toString() else "$it" })
 }
 
@@ -301,10 +280,10 @@ fun convertToString(n: Int, base: Int): String {
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
 fun decimal(digits: List<Int>, base: Int): Int {
-    var sum = 0.0
+    var sum = 0
     val n = digits.size - 1
-    for (i in 0..n) sum += digits[n - i] * base.toDouble().pow(i)
-    return sum.toInt()
+    for (i in 0..n) sum += digits[n - i] * base.toDouble().pow(i).toInt()
+    return sum
 }
 
 /**
@@ -320,7 +299,7 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val list = str.map { if (it >= 'a') ((it + 10) - 'a') else (it - '0')}
+    val list = str.map { if (it >= 'a') ((it + 10) - 'a') else (it - '0') }
     return decimal(list, base)
 }
 
