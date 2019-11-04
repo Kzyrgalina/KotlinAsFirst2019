@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.numberRevert
 import lesson3.task1.fib
 import kotlin.math.abs
 import kotlin.math.pow
@@ -241,8 +242,11 @@ fun factorizeToString(n: Int): String = factorize(n).toMutableList().joinToStrin
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    if (n == 0) return listOf(0)
     val list = mutableListOf<Int>()
+    if (n == 0) {
+        list.add(0, 0)
+        return list
+    }
     var num = n
     var i = 0
     while (num > 0) {
@@ -265,7 +269,6 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    if (n == 0) return "0"
     return convert(n, base).toMutableList().joinToString(
         separator = "",
         transform = { if (it > 9) ('a' + (it - 10)).toString() else "$it" })
