@@ -232,7 +232,7 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = factorize(n).toMutableList().joinToString(separator = "*")
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
@@ -268,12 +268,8 @@ fun convert(n: Int, base: Int): List<Int> {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String {
-    return convert(n, base).toMutableList().joinToString(
-        separator = "",
-        transform = { if (it > 9) ('a' + (it - 10)).toString() else "$it" })
-}
-
+fun convertToString(n: Int, base: Int): String =
+    convert(n, base).map { if (it > 9) ('a' + (it - 10)) else it }.joinToString("")
 
 /**
  * Средняя
@@ -323,4 +319,75 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    //var answer = mutableListOf<String>()
+    var answer: String
+    fun digitStr(n: Int): List<Int> {
+        var num = n
+        val list = mutableListOf<Int>()
+        while (num > 0) {
+            list.add(num % 10)
+            num /= 10
+        }
+        return list.reversed()
+    }
+
+    var str = digitStr(n) // лист из разрядов
+    val count = digitStr(n).size // колиечство разрядов
+    //var str1: String
+    //var str2: String
+    val digits = listOf<String>(
+        "ноль", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь",
+        "девять"
+    )
+    val ten = listOf<String>(
+        "десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать",
+        "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"
+    )
+    val decades = listOf<String>(
+        "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят",
+        "семьдесят", "восемьдесят", "девяносто"
+    )
+    val hundreds = listOf<String>(
+        "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот",
+        "семьсот", "восемьсот", "девятьсот"
+    )
+    val thousands = listOf<String>("тысяча", "тысячи", "тысяч")
+    val thDigit = listOf<String>("одна", "две")
+
+    fun count(n: Int): String {
+        var num = n
+        if (count > 3) {
+            str = digitStr(n / 1000)
+            num = n / 1000
+        }
+        return when {
+            num / 10 == 0 && n < 1000 -> digits[str[0]]
+            //num / 10 == 1 && n > 1000 -> thDigit[0]
+            //num / 10 == 2 && n > 1000 -> thDigit[1]
+            num in 10..19 -> ten[str[1]]
+            num < 100 && num % 10 == 0 && n != 10 -> decades[str[0] - 2]
+            num in 20..99 && n < 1000 -> decades[str[0] - 2] + " " + digits[str[1]]
+            num % 100 == 0 -> hundreds[str[0] - 1]
+            (num / 10) % 10 == 0 -> hundreds[str[0] - 1] + " " + digits[str[2]]
+            num % 100 in 10..19 -> hundreds[str[0] - 1] + " " + ten[str[2]]
+            num % 10 == 0 && n % 100 != 0 -> hundreds[str[0] - 1] + " " + decades[str[1] - 2]
+            else -> hundreds[str[0] - 1] + " " + decades[str[1] - 2] + " " + digits[str[2]]
+        }
+    }
+
+    val th = (n / 1000) % 10
+    return if (count < 4) count(n)
+    else
+        when (th) {
+            //1 -> count(n / 1000) + " " + thousands[0] + " " + count(n % 1000)
+            //2 -> count(n / 1000) + " " + thousands[1] + " " + count(n % 1000)
+            //3 -> count(n / 1000) + " " + digits[2] + " " + thousands[1] + " " + count(n % 1000)
+            //4 -> count(n / 1000) + " " + digits[3] + " " + thousands[1] + " " + count(n % 1000)
+            //else -> count(n / 1000) + " " + digits[th - 1] + " " + thousands[2] + " " + count(n % 1000)
+            1 -> count(n / 1000) + " " + thousands[0] + " " + count(n % 1000)
+            in 2..4 -> count(n / 1000) + " " + thousands[1] + " " + count(n % 1000)
+            else -> count(n / 1000) + " " + thousands[2] + " " + count(n % 1000)
+        }
+
+}
