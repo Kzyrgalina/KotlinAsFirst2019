@@ -112,8 +112,8 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    for ((ka, va) in a) if (b[ka] != va) return false
-    return true
+    //for ((ka, va) in a) if (b[ka] != va) return false
+    //return true
 }
 
 /**
@@ -131,7 +131,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *     -> a changes to mutableMapOf() aka becomes empty
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
-    for ((kb, vb) in b) a.remove(kb, vb)
+    //for ((kb, vb) in b) a.remove(kb, vb)
 }
 
 /**
@@ -161,13 +161,13 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val mapC = (mapA + mapB).toMutableMap()
-    for ((ka, va) in mapA) {
-        for ((kb, vb) in mapB) {
-            if (ka == kb && va != vb) mapC[ka] = "$va, $vb"
-        }
-    }
-    return mapC
+    //val mapC = (mapA + mapB).toMutableMap()
+   // for ((ka, va) in mapA) {
+   //     for ((kb, vb) in mapB) {
+   //         if (ka == kb && va != vb) mapC[ka] = "$va, $vb"
+   //     }
+    //}
+    //return mapC
 }
 
 /**
@@ -215,11 +215,11 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    if (chars.isEmpty()) return false
-    for (element in chars) {
-        if (element !in word) return false
-    }
-    return true
+    //if (chars.isEmpty()) return false
+    //for (element in chars) {
+     //   if (element !in word) return false
+    //}
+    //return true
 }
 
 /**
