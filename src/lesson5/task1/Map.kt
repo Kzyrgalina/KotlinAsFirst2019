@@ -202,7 +202,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     if (chars.isEmpty() && word.isNotEmpty()) return false
-    if (chars.isEmpty() && word.isEmpty()) return true
+    if (word.isEmpty()) return true
     for (element in chars) {
         if (element !in word) return false
     }
@@ -289,7 +289,15 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    if (list.isEmpty()) return -1 to -1
+    for (i in 0 until list.size - 1) {
+        for (j in i + 1 until list.size) {
+            if (list[i] + list[j] == number) return i to j
+        }
+    }
+    return -1 to -1
+}
 
 /**
  * Очень сложная
