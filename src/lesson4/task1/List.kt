@@ -319,7 +319,7 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String {
+fun russian(n: Int): String = TODO()/*{
     //var answer = mutableListOf<String>()
     var answer: String
     fun digitStr(n: Int): List<Int> {
@@ -391,3 +391,4 @@ fun russian(n: Int): String {
         }
 
 }
+*/
