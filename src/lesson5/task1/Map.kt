@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import kotlin.math.max
+
 /**
  * Пример
  *
@@ -79,8 +81,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
     for (word in text) res.add(word)
     return res
 }
-
-
+//----------------------------------------------------------------------------------------------------------------------
 /**
  * Простая
  *
@@ -153,13 +154,16 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val mapC = (mapA + mapB).toMutableMap()
+    val mapC = mutableMapOf<String, String>()
+    val keysList = mutableListOf<String>()
     for ((ka, va) in mapA) {
-        for ((kb, vb) in mapB) {
-            if (ka == kb && va != vb) mapC[ka] = "$va, $vb"
+        mapC[ka] = va
+        if (mapB.containsKey(ka) && !mapB.containsValue(va)) {
+            mapC[ka] = va + ", " + mapB[ka]
+            keysList.add(ka)
         }
     }
-    return mapC
+    return mapC + (mapB - keysList)
 }
 
 /**
@@ -201,10 +205,10 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    if (chars.isEmpty() && word.isNotEmpty()) return false
-    if (word.isEmpty()) return true
-    for (element in chars) {
-        if (element !in word) return false
+    word.toLowerCase()
+    val setOfWord = word.toSet()
+    for (element in setOfWord) {
+        if (element !in chars) return false
     }
     return true
 }
@@ -222,17 +226,10 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
-    var map = mutableMapOf<String, Int>()
-    val answer = mutableMapOf<String, Int>()
-    for (k in list) map[k] = map.getOrDefault(k, 0) + 1
-    for ((k, v) in map) {
-        if (map[k] != 1) {
-            answer[k] = v
-        }
-    }
-    return answer
+    val map = mutableMapOf<String, Int>()
+    for (k in list) map.getOrDefault(k, 0) + 1
+    return map.filterValues { it > 1 }
 }
-
 
 
 /**
