@@ -319,23 +319,7 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()/*{
-    //var answer = mutableListOf<String>()
-    var answer: String
-    fun digitStr(n: Int): List<Int> {
-        var num = n
-        val list = mutableListOf<Int>()
-        while (num > 0) {
-            list.add(num % 10)
-            num /= 10
-        }
-        return list.reversed()
-    }
-
-    var str = digitStr(n) // лист из разрядов
-    val count = digitStr(n).size // колиечство разрядов
-    //var str1: String
-    //var str2: String
+fun russian(n: Int): String {
     val digits = listOf<String>(
         "ноль", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь",
         "девять"
@@ -352,43 +336,56 @@ fun russian(n: Int): String = TODO()/*{
         "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот",
         "семьсот", "восемьсот", "девятьсот"
     )
-    val thousands = listOf<String>("тысяча", "тысячи", "тысяч")
-    val thDigit = listOf<String>("одна", "две")
 
-    fun count(n: Int): String {
-        var num = n
-        if (count > 3) {
-            str = digitStr(n / 1000)
-            num = n / 1000
+    var res = mutableListOf<String>()
+    var answer = mutableListOf<String>()
+
+    fun hundred(n: Int): MutableList<String> {
+        val list = mutableListOf<String>()
+        if (n == 0) return list
+        when {
+            n in 1..9 -> list.add(digits[n % 10])
+            n in 10..19 -> list.add(ten[n % 10])
+            n < 100 -> {
+                list.add(decades[(n / 10) % 10 - 2])
+                if (n % 10 != 0) list.add(digits[n % 10])
+            }
+            else ->
+                when {
+                    n % 100 == 0 -> list.add(hundreds[n / 100 - 1])
+                    n % 100 in 1..9 -> {
+                        list.add(hundreds[n / 100 - 1])
+                        list.add(digits[n % 10])
+                    }
+                    n % 100 in 10..19 -> {
+                        list.add(hundreds[n / 100 - 1])
+                        list.add(ten[n % 10])
+                    }
+                    n % 10 == 0 -> {
+                        list.add(hundreds[n / 100 - 1])
+                        list.add(decades[(n / 10) % 10 - 2])
+                    }
+                    else -> {
+                        list.add(hundreds[n / 100 - 1])
+                        list.add(decades[(n / 10) % 10 - 2])
+                        list.add(digits[n % 10])
+                    }
+                }
         }
-        return when {
-            num / 10 == 0 && n < 1000 -> digits[str[0]]
-            //num / 10 == 1 && n > 1000 -> thDigit[0]
-            //num / 10 == 2 && n > 1000 -> thDigit[1]
-            num in 10..19 -> ten[str[1]]
-            num < 100 && num % 10 == 0 && n != 10 -> decades[str[0] - 2]
-            num in 20..99 && n < 1000 -> decades[str[0] - 2] + " " + digits[str[1]]
-            num % 100 == 0 -> hundreds[str[0] - 1]
-            (num / 10) % 10 == 0 -> hundreds[str[0] - 1] + " " + digits[str[2]]
-            num % 100 in 10..19 -> hundreds[str[0] - 1] + " " + ten[str[2]]
-            num % 10 == 0 && n % 100 != 0 -> hundreds[str[0] - 1] + " " + decades[str[1] - 2]
-            else -> hundreds[str[0] - 1] + " " + decades[str[1] - 2] + " " + digits[str[2]]
-        }
+        return list
     }
 
-    val th = (n / 1000) % 10
-    return if (count < 4) count(n)
-    else
-        when (th) {
-            //1 -> count(n / 1000) + " " + thousands[0] + " " + count(n % 1000)
-            //2 -> count(n / 1000) + " " + thousands[1] + " " + count(n % 1000)
-            //3 -> count(n / 1000) + " " + digits[2] + " " + thousands[1] + " " + count(n % 1000)
-            //4 -> count(n / 1000) + " " + digits[3] + " " + thousands[1] + " " + count(n % 1000)
-            //else -> count(n / 1000) + " " + digits[th - 1] + " " + thousands[2] + " " + count(n % 1000)
-            1 -> count(n / 1000) + " " + thousands[0] + " " + count(n % 1000)
-            in 2..4 -> count(n / 1000) + " " + thousands[1] + " " + count(n % 1000)
-            else -> count(n / 1000) + " " + thousands[2] + " " + count(n % 1000)
+    if (n > 1000) {
+        res = hundred(n / 1000)
+        when {
+            "один" in res -> res[res.size - 1] = "одна тысяча"
+            "два" in res -> res[res.size - 1] = "две тысячи"
+            (res.last() == "три") || (res.last() == "четыре") -> res.add("тысячи")
+            else -> res.add("тысяч")
         }
-
+        answer = (res + hundred(n % 1000)).toMutableList()
+    } else answer = hundred(n)
+    return answer.joinToString(
+        separator = " "
+    )
 }
-*/
