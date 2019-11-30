@@ -76,7 +76,7 @@ fun main() {
 fun dateStrToDigit(str: String): String {
     val date = mutableMapOf<String, Pair<String, Int>>( // месяц to (номер to количество дней)
         "января" to ("01" to 31),
-        "февраля" to ("02" to -1),
+        "февраля" to ("02" to 30),
         "марта" to ("03" to 31),
         "апреля" to ("04" to 30),
         "мая" to ("05" to 31),
@@ -132,6 +132,7 @@ fun dateDigitToStr(digital: String): String = TODO()
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
+    if (phone == "") return ""
     val answ = mutableListOf<String>()
     val phoneChar = phone.map { it }
     for (i in phoneChar.indices) {
