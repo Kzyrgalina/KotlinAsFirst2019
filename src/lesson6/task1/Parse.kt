@@ -2,6 +2,10 @@
 
 package lesson6.task1
 
+import lesson1.task1.accountInThreeYears
+import lesson2.task2.daysInMonth
+import java.io.File.separator
+
 /**
  * Пример
  *
@@ -69,7 +73,37 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val date = mutableMapOf<String, Pair<String, Int>>( // месяц to (номер to количество дней)
+        "января" to ("01" to 31),
+        "февраля" to ("02" to -1),
+        "марта" to ("03" to 31),
+        "апреля" to ("04" to 30),
+        "мая" to ("05" to 31),
+        "июня" to ("06" to 30),
+        "июля" to ("07" to 31),
+        "августа" to ("08" to 31),
+        "сентября" to ("09" to 30),
+        "октября" to ("10" to 31),
+        "ноября" to ("11" to 30),
+        "декабря" to ("12" to 31)
+    )
+    val dateList = str.split(" ").toMutableList()
+    if (dateList.size < 3) return "" //некорректная дата
+    var i = 0
+    val year = dateList[2].toInt()
+    val february = daysInMonth(2, year)
+    for ((name, pair) in date) {
+        if (name in dateList) { //поиск мсяца и проверка
+            if (dateList[0].toInt() > date.getValue(name).second) return "" //проверили корректность числа мсяца
+            dateList[1] = date.getValue(name).first //заменили месяц на число в виде строки
+        } else i++
+        if (i == 12) return "" //месяц не найден
+        if ((i == 1) && (february < dateList[0].toInt())) return "" //проверка 28 или 29
+    }
+    if (dateList[0].toInt() in 0..9) dateList[0] = String.format("%02d", dateList[0].toInt())
+    return dateList.joinToString(separator = ".")
+}
 
 /**
  * Средняя
@@ -97,7 +131,21 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val answ = mutableListOf<String>()
+    val phoneChar = phone.map { it }
+    for (i in phoneChar.indices) {
+        val digit = phoneChar[i]
+        when {
+            digit in '0'..'9' -> answ.add(digit.toString())
+            (digit == '(') && (phoneChar[i + 1] == ')') -> return ""
+            (digit == '+') || (digit == '(') || (digit == ')') || (digit == '-') || (digit == ' ') -> answ.add("")
+            else -> return ""
+        }
+    }
+    return if (phoneChar[0] == '+') answ.joinToString(prefix = "+", separator = "")
+    else answ.joinToString(separator = "")
+}
 
 /**
  * Средняя
@@ -109,7 +157,18 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val digits = jumps.split(" ")
+    var answ = -1
+    return try {
+        for (current in digits) {
+            if (current != "-" && current != "%" && current.toInt() > answ) answ = current.toInt()
+        }
+        answ
+    } catch (e: NumberFormatException) {
+        -1
+    }
+}
 
 /**
  * Сложная
@@ -144,7 +203,15 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val exp = str.split(" ").map { it.toLowerCase() }
+    var res = 0
+    for (i in 0 until exp.size - 1) {
+        if (exp[i] == exp[i + 1]) return res
+        res += exp[i].length + 1
+    }
+    return -1
+}
 
 /**
  * Сложная
