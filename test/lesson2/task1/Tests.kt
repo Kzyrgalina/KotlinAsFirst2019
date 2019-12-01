@@ -40,6 +40,7 @@ class Tests {
         assertEquals("12 лет", ageDescription(12))
         assertEquals("111 лет", ageDescription(111))
         assertEquals("199 лет", ageDescription(199))
+        assertEquals("30 лет", ageDescription(30))
     }
 
     @Test
