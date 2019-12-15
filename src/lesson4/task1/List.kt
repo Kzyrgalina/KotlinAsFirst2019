@@ -216,7 +216,7 @@ fun factorize(n: Int): List<Int> {
         list.add(2)
         return list
     }
-    while (num > 1) {
+    while (num > sqrt(num.toDouble())) {
         if (num % i == 0) {
             list.add(i)
             num /= i
