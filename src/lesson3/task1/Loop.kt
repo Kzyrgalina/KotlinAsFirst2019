@@ -91,9 +91,8 @@ fun digitNumber(n: Int): Int {
 fun fib(n: Int): Int {
     var earlierFib = 0
     var lastFib = 1
-    var plusFib: Int
-    for ((count, i) in (0 until n - 1).withIndex()) {
-        plusFib = lastFib + earlierFib
+    for (i in 0 until n) {
+        val plusFib = lastFib + earlierFib
         earlierFib = lastFib
         lastFib = plusFib
     }
@@ -106,16 +105,16 @@ fun fib(n: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = m * n / (nod(m, n))
+fun lcm(m: Int, n: Int): Int = m / nod(m, n) * n
 
 fun nod(a: Int, b: Int): Int {
-    var a = a
-    var b = b
-    while ((a != 0) && (b != 0)) {
-        if (a > b) a %= b
-        else b %= a
+    var num1 = a
+    var num2 = b
+    while ((num1 != 0) && (num2 != 0)) {
+        if (num1 > num2) num1 %= num2
+        else num2 %= num1
     }
-    return a + b
+    return num1 + num2
 }
 
 /**
@@ -125,11 +124,11 @@ fun nod(a: Int, b: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var div = 2
-    for (i in 2..n) {
-        if (n % i == 0) break
+    for (i in 2..sqrt(n.toDouble()).toInt()) {
+        if (n % i == 0) return div
         div++
     }
-    return div
+    return n
 }
 
 /**
@@ -139,7 +138,7 @@ fun minDivisor(n: Int): Int {
  */
 fun maxDivisor(n: Int): Int {
     var n2 = n / 2
-    for (i in (n / 2) downTo 2) {
+    for (i in (n / 2) downTo sqrt(n.toDouble()).toInt()) {
         if (n % i == 0) return n2
         n2--
     }
@@ -304,14 +303,13 @@ fun squareSequenceDigit(n: Int): Int {
     var square = 1
     var length = 3
     var i = 4
-    if (n in 1..3) return sqr(n)
+    if (n < 4) return sqr(n)
     while (length < n) {
         square = sqr(i)
-        length += digitNumber(sqr(i))
+        length += digitNumber(square)
         i++
     }
-    if (length == n) return square % 10
-    else while (length != n) {
+    while (length != n) {
         square /= 10
         length--
     }
@@ -330,16 +328,7 @@ fun squareSequenceDigit(n: Int): Int {
 fun fibSequenceDigit(n: Int): Int {
     var fibonach = 1
     var length = 6
-    var i = 7
-    fun fibLength(x: Int): Int {
-        var k = 0
-        var number = x
-        while (number > 0) {
-            k++
-            number /= 10
-        }
-        return k
-    }
+    var i = 6
     when (n) {
         1 -> return 1
         2 -> return 1
@@ -350,11 +339,10 @@ fun fibSequenceDigit(n: Int): Int {
     }
     while (length < n) {
         fibonach = fib(i)
-        length += fibLength(fib(i))
+        length += digitNumber(fibonach)
         i++
     }
-    if (length == n) return fibonach % 10
-    else while (length != n) {
+    while (length != n) {
         fibonach /= 10
         length--
     }
