@@ -6,6 +6,7 @@ import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -67,10 +68,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     return when {
-        (age % 10 == 1) && (age % 100 != 11) -> "$age год"
-        (age in 5..20) || (age in 105..120) -> return "$age лет"
-        (age % 10 in 2..4) -> return "$age года"
-        else -> return "$age лет"
+        (age in 5..20) || (age in 105..120) -> "$age лет"
+        (age % 10 == 1) -> "$age год"
+        (age % 10 in 2..4) -> "$age года"
+        else -> "$age лет"
     }
 }
 
@@ -164,16 +165,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    return when {
-        ((c == d) || (a == b)) -> -1
-        (((b - a) == 0) || ((d - c) == 0)) -> 0
-        (c > a) -> when {
-            c > b -> -1
-            d > b -> b - c
-            else -> d - c
-        }
-        (d < a) -> -1
-        (d > b) -> (b - a)
-        else -> (d - a)
-    }
+    val x = min(b, d) - max(a, c)
+    return if (x >= 0) x
+    else -1
 }
