@@ -123,10 +123,8 @@ fun nod(a: Int, b: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var div = 2
     for (i in 2..sqrt(n.toDouble()).toInt()) {
-        if (n % i == 0) return div
-        div++
+        if (n % i == 0) return i
     }
     return n
 }
@@ -136,14 +134,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var n2 = n / 2
-    for (i in (n / 2) downTo sqrt(n.toDouble()).toInt()) {
-        if (n % i == 0) return n2
-        n2--
-    }
-    return 1
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
