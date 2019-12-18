@@ -123,7 +123,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
     for ((kb, vb) in b) a.remove(kb, vb)
 }
 
@@ -154,17 +154,13 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val mapC = mutableMapOf<String, String>()
-    val keysList = mutableListOf<String>()
-    for ((ka, va) in mapA) {
-        mapC[ka] = va
-        if (mapB.containsKey(ka) && !mapB.containsValue(va)) {
-            mapC[ka] = va + ", " + mapB[ka]
-            keysList.add(ka)
-        }
+    val mapC = (mapB + mapA).toMutableMap()
+    for ((key, value) in mapC) {
+        if ((key in mapB) && (mapC[key] != mapB[key])) mapC[key] = value + ", " + mapB[key]
     }
-    return mapC + (mapB - keysList)
+    return mapC
 }
+
 
 /**
  * Средняя
@@ -205,8 +201,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    word.toLowerCase()
-    val setOfWord = word.toSet()
+    val setOfWord = word.toLowerCase()
     for (element in setOfWord) {
         if (element !in chars) return false
     }
@@ -225,21 +220,12 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-/*fun extractRepeats(list: List<String>): Map<String, Int> {
-    val map = mutableMapOf<String, Int>()
-    for (k in list) map.getOrDefault(k, 0) + 1
-    return map.filterValues { it > 1 }
-}*/
 fun extractRepeats(list: List<String>): Map<String, Int> {
-    var map = mutableMapOf<String, Int>()
-    val answer = mutableMapOf<String, Int>()
-    for (k in list) map[k] = map.getOrDefault(k, 0) + 1
-    for ((k, v) in map) {
-        if (map[k] != 1) {
-            answer[k] = v
-        }
+    val map = mutableMapOf<String, Int>()
+    for (k in list) {
+        map[k] = (map[k] ?: 0) + 1
     }
-    return answer
+    return map.filterValues { it > 1 }
 }
 
 
