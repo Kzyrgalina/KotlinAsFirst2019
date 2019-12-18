@@ -96,7 +96,7 @@ fun fib(n: Int): Int {
         earlierFib = lastFib
         lastFib = plusFib
     }
-    return earlierFib
+    return lastFib
 }
 
 /**
