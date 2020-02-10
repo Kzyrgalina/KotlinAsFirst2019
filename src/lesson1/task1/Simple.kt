@@ -127,4 +127,5 @@ fun numberRevert(number: Int): Int {
     val b = (number / 10) % 10
     val c = number % 10
     return c * 100 + b * 10 + a
+
 }

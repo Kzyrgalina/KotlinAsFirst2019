@@ -3,6 +3,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
+import lesson2.task2.daysInMonth
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin

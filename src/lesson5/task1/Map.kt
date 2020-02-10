@@ -240,6 +240,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  */
 fun hasAnagrams(words: List<String>): Boolean = words.map { it.toSet() }.toSet().size != words.size
 
+
 /**
  * Сложная
  *
@@ -314,4 +315,30 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()/* {
+    val name = mutableListOf<String>()
+    val weight = mutableListOf<Int>()
+    val price = mutableListOf<Int>()
+    val res = mutableSetOf<String>()
+    for ((element, pair) in treasures) {
+        weight.add(pair.first)
+        price.add(pair.second)
+        name.add(element)
+    }
+    val table = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
+    for (k in 1..treasures.size) {
+        for (w in 1..capacity) {
+            if (w >= weight[k - 1]) table[k][w] = max(table[k - 1][w], table[k - 1][w - weight[k - 1] + price[k - 1]])
+            else table[k][w] = table[k - 1][w]
+        }
+    }
+    fun answer(k: Int, s: Int) {
+        if (table[k][s] == 0) return
+        if (table[k - 1][s] == table[k][s]) answer(k - 1, s)
+        else answer(k - 1, s - weight[k])
+        res.add(name[k - 1])
+    }
+    answer(treasures.size, capacity)
+    return res
+}
+*/

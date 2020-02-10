@@ -74,7 +74,7 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    val date = mutableMapOf<String, Pair<String, Int>>( // месяц to (номер to количество дней)
+    /*val date = mutableMapOf<String, Pair<String, Int>>( // месяц to (номер to количество дней)
         "января" to ("01" to 31),
         "февраля" to ("02" to 30),
         "марта" to ("03" to 31),
@@ -87,19 +87,26 @@ fun dateStrToDigit(str: String): String {
         "октября" to ("10" to 31),
         "ноября" to ("11" to 30),
         "декабря" to ("12" to 31)
-    )
+    )*/
+    val date = mutableMapOf<String, Pair<String, Int>>()
+    for (i in date) {
+
+    }
     val dateList = str.split(" ").toMutableList()
-    if (dateList.size < 3) return "" //некорректная дата
+    if (dateList.size < 3) return "*" //некорректная дата
     var i = 0
     val year = dateList[2].toInt()
     val february = daysInMonth(2, year)
     for ((name, pair) in date) {
         if (name in dateList) { //поиск мсяца и проверка
-            if (dateList[0].toInt() > date.getValue(name).second) return "" //проверили корректность числа мсяца
+            println("$i внутри цикла")
+            if (dateList[0].toInt() > date.getValue(name).second) return "**" //проверили корректность числа мсяца
             dateList[1] = date.getValue(name).first //заменили месяц на число в виде строки
+            println("прошли")
         } else i++
-        if (i == 12) return "" //месяц не найден
-        if ((i == 1) && (february < dateList[0].toInt())) return "" //проверка 28 или 29
+        println("$i после цикла")
+        if (i == 12) return "***" //месяц не найден
+        if ((i == 1) && (february < dateList[0].toInt())) return "вот эта проверка вылетает? $i" //проверка 28 или 29
     }
     if (dateList[0].toInt() in 0..9) dateList[0] = String.format("%02d", dateList[0].toInt())
     return dateList.joinToString(separator = ".")
@@ -193,7 +200,37 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int = TODO() /*{
+    val digits = expression.split(" ")
+    var answ = 0
+    val e = IllegalArgumentException()
+    for (i in expression) {
+        if (i != '+' && i != '-' && i !in '0'..'9') throw e
+    }
+    println("***")
+    try {
+        digits.first().toInt()
+        digits.last().toInt()
+    } catch (ex: java.lang.IllegalArgumentException) {
+        throw e
+    }
+    println("***")
+    var buf = "digit"
+
+    for (i in 1 until digits.size - 1) {
+        when {
+            buf == "digit" && digits[i] != "-" && digits[i] != "+" -> throw e
+            (buf == "+" || buf == "-") && (digits[i] != "-" || digits[i] != "+") -> throw e
+            buf == "+" -> answ += digits[i].toInt()
+            buf == "-" -> answ -= digits[i].toInt()
+            digits[i] == "+" -> buf = "+"
+            digits[i] == "-" -> buf = "-"
+            else -> buf = "digit"
+        }
+    }
+    println("***")
+    return answ
+}*/
 
 /**
  * Сложная
@@ -215,8 +252,7 @@ fun firstDuplicateIndex(str: String): Int {
 }
 
 /**
- * Сложная
- *
+ * Сложная *
  * Строка содержит названия товаров и цены на них в формате вида
  * "Хлеб 39.9; Молоко 62; Курица 184.0; Конфеты 89.9".
  * То есть, название товара отделено от цены пробелом,
@@ -226,7 +262,7 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    if (!description.matches(Regex("""((.+\d+(.\d+)?);\s)*(.+\d+(.\d+)?)"""))) return ""
+    if (!description.matches(Regex("""(((.+ \d+(\.\d+))*(; (.+ \d+(\.\d+))*)*)+)"""))) return ""
     val expr = description.split("; ")
     var nameAndCost = listOf<String>()
     var cost = 0.0
@@ -238,7 +274,7 @@ fun mostExpensive(description: String): String {
             name = nameAndCost[0]
         }
     }
-    if (cost == 0.0) return "Any good with price 0.0"
+    if (cost == 0.0) return nameAndCost[0]
     return name
 }
 
